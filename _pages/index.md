@@ -5,15 +5,15 @@ id: home
 permalink: /
 ---
 
-# Welcome! 🌱
+# Hi, I'm Samuele Simone! 🌱
 
-<p style="padding: 3em 1em; background: #f5f7ff; border-radius: 4px;">
-  Take a look at <span style="font-weight: bold">[[Your first note]]</span> to get started on your exploration.
-</p>
 
-This digital garden template is free, open-source, and [available on GitHub here](https://github.com/maximevaillancourt/digital-garden-jekyll-template).
+  <ul style="padding: 1em 1em; background: #f5f7ff; border-radius: 4px;">
+    <li style="margin: 1em">PhD student in VRP and AI @ UNIMI</li>
+    <li style="margin: 1em">Msc in Computer Science @ UNIMI</li>
+    <li style="margin: 1em">Bsc in Computer Science @ UNIMIB</li>
+  </ul>
 
-The easiest way to get started is to read this [step-by-step guide explaining how to set this up from scratch](https://maximevaillancourt.com/blog/setting-up-your-own-digital-garden-with-jekyll).
 
 <strong>Recently updated notes</strong>
 

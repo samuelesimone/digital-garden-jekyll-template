@@ -59,6 +59,7 @@ $$min \sum_{v = 1}^{m}\sum_{i = 1}^{n}\sum_{j = 1}^{n} d_{ij}x_{ijv}$$
 
 * ### Flow constraint
 The number of vehicles entering a node must equal the number of vehicles leaving the node.
+
 $$\sum_{i = 1}^{n} x_{ijv} = \sum_{i = 1}^{n} x_{jiv} \quad \forall j \in \{1,...,n\}, \quad v \in \{1,...,m\}$$
 
 * ### Each node (customer) must be visited once
@@ -67,12 +68,13 @@ $$\sum_{i = 1}^{n} \sum_{v = 1}^{m} x_{ijv} = 1 \quad \forall j \in \{2,...,n\}$
 
 * ### Every vehicle leaves the depot
 Note that the index $i = 1$ since it is the deposit while the index $j = 2$
+
 $$\sum_{j = 2}^{n}x_{1jv} = 1 \quad \forall v \in \{1,...,m\}$$
 
 * ### Capacity constraint
 Each vehicle has a certain possible amount that it can carry. So it is necessary not to exceed that threshold , considering that in the treated problem all vehicles have the same capacity (homogeneous vehicle fleet).
 
-$$\sum_{i = 1}^{n}\sum\limits_{j = 2}^{m}q_{j}x_{ijv} \leq Q \quad \forall v \in \{1,...,m\}$$.
+$$\sum_{i = 1}^{n}\sum\limits_{j = 2}^{m}q_{j}x_{ijv} \leq Q \quad \forall v \in \{1,...,m\}$$
 
 ## References
 {% bibliography --cited %}
