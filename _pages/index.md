@@ -6,12 +6,11 @@ permalink: /
 ---
 
 # Hi, I'm Samuele Simone! 🌱
-
+  <img style="border-radius: 50%; width:250px; height:250px" src="https://avatars.githubusercontent.com/u/33575158?v=4" alt="samuelesimone">
 
   <ul style="padding: 1em 1em; background: #f5f7ff; border-radius: 4px;">
     <li style="margin: 1em">PhD student in VRP and AI @ UNIMI</li>
-    <li style="margin: 1em">Msc in Computer Science @ UNIMI</li>
-    <li style="margin: 1em">Bsc in Computer Science @ UNIMIB</li>
+    <li style="margin: 1em">If you want to know more about me <a class="internal-link" href="{{ site.baseurl }}/about">click here</a></li>
   </ul>
 
 
