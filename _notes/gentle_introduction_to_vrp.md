@@ -1,6 +1,7 @@
 ---
 title: A gentle introduction to VRP problem
 toc: true
+image: /assets/agitv_cover.png
 ---
   
 
