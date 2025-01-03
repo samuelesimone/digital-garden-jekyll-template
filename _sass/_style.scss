@@ -29,6 +29,22 @@ time {
   margin: 0.5em 0 1em;
 }
 
+.horizontal-layout {
+  display: flex;
+  align-items: center; /* Centra verticalmente gli elementi */
+  gap: 10px; /* Spaziatura tra gli elementi */
+}
+
+.horizontal-layout h1 {
+  margin: 0; /* Rimuovi margini per evitare spazi extra */
+}
+
+.horizontal-layout time,
+.horizontal-layout span {
+  margin: 0;
+}
+
+
 footer {
   margin: 2em 0;
   font-size: 0.8em;
