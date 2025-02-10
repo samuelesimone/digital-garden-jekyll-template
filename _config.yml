@@ -25,11 +25,14 @@ plugins:
   - jekyll-scholar
   - jekyll-toc
 
+
 sass:
   sass_dir:          _sass
   style:            :compressed
 
 collections:
+  slides:
+    permalink: /slides
   notes:
     output: true
     permalink: /:slug

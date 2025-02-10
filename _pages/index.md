@@ -25,6 +25,17 @@ permalink: /
   {% endfor %}
 </ul>
 
+<strong>Recently updated slides</strong>
+
+<ul>
+  {% assign recent_slides = site.slides | sort: "last_modified_at_timestamp" | reverse %}
+  {% for slide in recent_slides limit: 5 %}
+    <li>
+      {{ slide.last_modified_at | date: "%Y-%m-%d" }} — <a class="internal-link" href="{{ site.baseurl }}{{ slide.url }}">{{ slide.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
 <style>
   .wrapper {
     max-width: 46em;
