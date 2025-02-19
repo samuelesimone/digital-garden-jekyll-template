@@ -1559,84 +1559,129 @@
 
 		if( dom.wrapper && !isPrintingPDF() ) {
 
-			var size = getComputedSlideSize();
+			if( !config.disableLayout ) {
 
-			var slidePadding = 20; // TODO Dig this out of DOM
+				// On some mobile devices '100vh' is taller than the visible
+				// viewport which leads to part of the presentation being
+				// cut off. To work around this we define our own '--vh' custom
+				// property where 100x adds up to the correct height.
+				//
+				// https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+				if( isMobileDevice ) {
+					document.documentElement.style.setProperty( '--vh', ( window.innerHeight * 0.01 ) + 'px' );
+				}
 
-			// Layout the contents of the slides
-			layoutSlideContents( config.width, config.height, slidePadding );
+				var size = getComputedSlideSize();
 
-			dom.slides.style.width = size.width + 'px';
-			dom.slides.style.height = size.height + 'px';
+				var oldScale = scale;
 
-			// Determine scale of content to fit within available space
-			scale = Math.min( size.presentationWidth / size.width, size.presentationHeight / size.height );
+				// Layout the contents of the slides
+				layoutSlideContents( config.width, config.height );
 
-			// Respect max/min scale settings
-			scale = Math.max( scale, config.minScale );
-			scale = Math.min( scale, config.maxScale );
+				dom.slides.style.width = size.width + 'px';
+				dom.slides.style.height = size.height + 'px';
 
-			// Don't apply any scaling styles if scale is 1
-			if( scale === 1 ) {
-				dom.slides.style.zoom = '';
-				dom.slides.style.left = '';
-				dom.slides.style.top = '';
-				dom.slides.style.bottom = '';
-				dom.slides.style.right = '';
-				transformSlides( { layout: '' } );
-			}
-			else {
-				// Use zoom to scale up in desktop Chrome so that content
-				// remains crisp. We don't use zoom to scale down since that
-				// can lead to shifts in text layout/line breaks.
-				if( scale > 1 && !isMobileDevice && /chrome/i.test( navigator.userAgent ) && typeof dom.slides.style.zoom !== 'undefined' ) {
-					dom.slides.style.zoom = scale;
+				// Determine scale of content to fit within available space
+				scale = Math.min( size.presentationWidth / size.width, size.presentationHeight / size.height );
+
+				// NEW LINE
+				if( isMobileDevice ) {
+					scale = Math.min( size.presentationWidth / 400, size.presentationHeight / 600 );
+				}
+				
+
+				// Respect max/min scale settings
+				scale = Math.max( scale, config.minScale );
+				scale = Math.min( scale, config.maxScale );
+
+				// Don't apply any scaling styles if scale is 1
+				if( scale === 1 ) {
+					dom.slides.style.zoom = '';
 					dom.slides.style.left = '';
 					dom.slides.style.top = '';
 					dom.slides.style.bottom = '';
 					dom.slides.style.right = '';
 					transformSlides( { layout: '' } );
 				}
-				// Apply scale transform as a fallback
 				else {
-					dom.slides.style.zoom = '';
-					dom.slides.style.left = '50%';
-					dom.slides.style.top = '50%';
-					dom.slides.style.bottom = 'auto';
-					dom.slides.style.right = 'auto';
-					transformSlides( { layout: 'translate(-50%, -50%) scale('+ scale +')' } );
+					// Zoom Scaling
+					// Content remains crisp no matter how much we scale. Side
+					// effects are minor differences in text layout and iframe
+					// viewports changing size. A 200x200 iframe viewport in a
+					// 2x zoomed presentation ends up having a 400x400 viewport.
+					if( scale > 1 && features.zoom && window.devicePixelRatio < 2 ) {
+						dom.slides.style.zoom = scale;
+						dom.slides.style.left = '';
+						dom.slides.style.top = '';
+						dom.slides.style.bottom = '';
+						dom.slides.style.right = '';
+						transformSlides( { layout: '' } );
+					}
+					// Transform Scaling
+					// Content layout remains the exact same when scaled up.
+					// Side effect is content becoming blurred, especially with
+					// high scale values on ldpi screens.
+					else {
+						dom.slides.style.zoom = '';
+						dom.slides.style.left = '50%';
+						dom.slides.style.top = '50%';
+						dom.slides.style.bottom = 'auto';
+						dom.slides.style.right = 'auto';
+						transformSlides( { layout: 'translate(-50%, -50%) scale('+ scale +')' } );
+						// NEW LINES
+						if( isMobileDevice ) {
+							dom.slides.style.width = '80vw';
+							dom.slides.style.height = '80vh';
+						}
+					}
 				}
-			}
 
-			// Select all slides, vertical and horizontal
-			var slides = toArray( dom.wrapper.querySelectorAll( SLIDES_SELECTOR ) );
+				// Select all slides, vertical and horizontal
+				var slides = toArray( dom.wrapper.querySelectorAll( SLIDES_SELECTOR ) );
 
-			for( var i = 0, len = slides.length; i < len; i++ ) {
-				var slide = slides[ i ];
+				for( var i = 0, len = slides.length; i < len; i++ ) {
+					var slide = slides[ i ];
 
-				// Don't bother updating invisible slides
-				if( slide.style.display === 'none' ) {
-					continue;
-				}
+					// Don't bother updating invisible slides
+					if( slide.style.display === 'none' ) {
+						continue;
+					}
 
-				if( config.center || slide.classList.contains( 'center' ) ) {
-					// Vertical stacks are not centred since their section
-					// children will be
-					if( slide.classList.contains( 'stack' ) ) {
-						slide.style.top = 0;
+					if( config.center || slide.classList.contains( 'center' ) ) {
+						// Vertical stacks are not centred since their section
+						// children will be
+						if( slide.classList.contains( 'stack' ) ) {
+							slide.style.top = 0;
+						}
+						else {
+							slide.style.top = Math.max( ( size.height - slide.scrollHeight ) / 2, 0 ) + 'px';
+							// NEW LINES
+							if( isMobileDevice ) {
+							slide.style.top = 1 + 'px';
+							}
+						}
 					}
 					else {
-						slide.style.top = Math.max( ( ( size.height - getAbsoluteHeight( slide ) ) / 2 ) - slidePadding, 0 ) + 'px';
+						slide.style.top = '';
 					}
-				}
-				else {
-					slide.style.top = '';
+
 				}
 
+				if( oldScale !== scale ) {
+					dispatchEvent( 'resize', {
+						'oldScale': oldScale,
+						'scale': scale,
+						'size': size
+					} );
+				}
 			}
 
 			updateProgress();
 			updateParallax();
+
+			if( isOverview() ) {
+				updateOverview();
+			}
 
 		}
 
